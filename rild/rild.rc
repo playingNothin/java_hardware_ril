@@ -1,5 +1,15 @@
-service vendor.ril-daemon /vendor/bin/hw/rild
-    class main
-    user radio
-    group radio cache inet misc audio log readproc wakelock
-    capabilities BLOCK_SUSPEND NET_ADMIN NET_RAW
+# Moto G20 (java) 2026-09-26: the AOSP vendor.ril-daemon service is DISABLED.
+# This definition collided with the SPRD unisoc.rild.rc
+# (vendor/etc/init/unisoc.rild.rc) which defines the SAME service name
+# "vendor.ril-daemon" pointing at the SPRD urild (/vendor/bin/hw/urild).
+# init ignores duplicate service names, and this file parses first
+# (alphabetical), so the running "rild" was THIS AOSP binary — which sleeps
+# forever in "RIL_Init starting sleep loop" without rild.libpath. The SPRD
+# urild never ran. With the SPRD definition active (run as root per the
+# unisoc.rild.rc comment), urild registers IRadio/slot1+slot2 and
+# IRadioConfig (proven live 2026-09-25).
+# service vendor.ril-daemon /vendor/bin/hw/rild
+#     class main
+#     user radio
+#     group radio cache inet misc audio log readproc wakelock
+#     capabilities BLOCK_SUSPEND NET_ADMIN NET_RAW
